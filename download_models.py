@@ -38,7 +38,7 @@ def download_models(model_dir='models'):
         
         # Skip if file already exists
         if os.path.exists(filepath):
-            print(f"✓ {filename} already exists, skipping...")
+            print(f"[SKIP] {filename} already exists, skipping...")
             continue
         
         print(f"Downloading {filename}...")
@@ -53,7 +53,7 @@ def download_models(model_dir='models'):
                     print(f"\r  Progress: {percent:.1f}%", end='', flush=True)
             
             urllib.request.urlretrieve(url, filepath, progress_hook)
-            print(f"\n✓ Downloaded successfully!")
+            print(f"\n[OK] Downloaded successfully!")
             
         except Exception as e:
             print(f"\n✗ Error downloading {filename}: {e}")
@@ -74,12 +74,12 @@ def download_models(model_dir='models'):
             missing_files.append(filename)
     
     if missing_files:
-        print("⚠️  Warning: The following files are missing:")
+        print("[WARNING] The following files are missing:")
         for filename in missing_files:
             print(f"  - {filename}")
         print("\nPlease download them manually and place in the 'models' directory.")
     else:
-        print("✓ All model files are ready!")
+        print("[OK] All model files are ready!")
         print("\nYou can now run the application with: python main.py")
 
 

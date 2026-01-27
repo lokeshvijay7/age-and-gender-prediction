@@ -66,7 +66,7 @@ class AgeGenderGUI:
         
         title_label = tk.Label(
             title_frame,
-            text="🎯 Age and Gender Prediction System",
+            text="Age and Gender Prediction System",
             font=('Arial', 20, 'bold'),
             bg='#1e1e1e',
             fg='#00ff88'
@@ -114,9 +114,9 @@ class AgeGenderGUI:
         
         # Radio buttons for mode
         modes = [
-            ("📷 Image", "image"),
-            ("🎥 Video File", "video"),
-            ("📹 Live Webcam", "webcam")
+            ("Image", "image"),
+            ("Video File", "video"),
+            ("Live Webcam", "webcam")
         ]
         
         for text, mode in modes:
@@ -145,7 +145,7 @@ class AgeGenderGUI:
         # Upload Image button
         self.upload_image_btn = tk.Button(
             btn_frame,
-            text="📁 Upload Image",
+            text="Upload Image",
             command=self._upload_image,
             font=('Arial', 10, 'bold'),
             bg='#00ff88',
@@ -161,7 +161,7 @@ class AgeGenderGUI:
         # Upload Video button
         self.upload_video_btn = tk.Button(
             btn_frame,
-            text="📁 Upload Video",
+            text="Upload Video",
             command=self._upload_video,
             font=('Arial', 10, 'bold'),
             bg='#4a4a4a',
@@ -178,7 +178,7 @@ class AgeGenderGUI:
         # Start Webcam button
         self.webcam_btn = tk.Button(
             btn_frame,
-            text="▶️ Start Webcam",
+            text="Start Webcam",
             command=self._toggle_webcam,
             font=('Arial', 10, 'bold'),
             bg='#4a4a4a',
@@ -195,7 +195,7 @@ class AgeGenderGUI:
         # Clear button
         self.clear_btn = tk.Button(
             btn_frame,
-            text="🗑️ Clear",
+            text="Clear",
             command=self._clear_display,
             font=('Arial', 10, 'bold'),
             bg='#ff4444',
@@ -463,7 +463,7 @@ class AgeGenderGUI:
                 raise ValueError("Failed to open webcam")
             
             self.is_webcam_running = True
-            self.webcam_btn.config(text="⏹️ Stop Webcam", bg='#ff4444')
+            self.webcam_btn.config(text="Stop Webcam", bg='#ff4444')
             
             self.webcam_thread = threading.Thread(target=self._webcam_loop, daemon=True)
             self.webcam_thread.start()
@@ -479,7 +479,7 @@ class AgeGenderGUI:
         self.is_webcam_running = False
         if self.video_capture:
             self.video_capture.release()
-        self.webcam_btn.config(text="▶️ Start Webcam", bg='#00ff88')
+        self.webcam_btn.config(text="Start Webcam", bg='#00ff88')
         self._update_status("Webcam stopped")
     
     def _video_loop(self):
@@ -644,8 +644,8 @@ class AgeGenderGUI:
             self.video_capture.release()
             self.video_capture = None
         
-        if self.webcam_btn.cget('text') == "⏹️ Stop Webcam":
-            self.webcam_btn.config(text="▶️ Start Webcam", bg='#00ff88')
+        if self.webcam_btn.cget('text') == "Stop Webcam":
+            self.webcam_btn.config(text="Start Webcam", bg='#00ff88')
     
     def run(self):
         """Start the GUI main loop."""

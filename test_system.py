@@ -12,7 +12,7 @@ def test_model_loading():
     print("Testing model loading...")
     try:
         detector = AgeGenderDetector()
-        print("✓ Models loaded successfully!")
+        print("[OK] Models loaded successfully!")
         return detector
     except Exception as e:
         print(f"✗ Error loading models: {e}")
@@ -28,7 +28,7 @@ def test_face_detection(detector):
     
     try:
         faces = detector.detect_faces(test_image)
-        print(f"✓ Face detection works! Detected {len(faces)} face(s)")
+        print(f"[OK] Face detection works! Detected {len(faces)} face(s)")
         return True
     except Exception as e:
         print(f"✗ Error in face detection: {e}")
@@ -44,7 +44,7 @@ def test_prediction(detector):
     
     try:
         results = detector.predict(test_image)
-        print(f"✓ Prediction works!")
+        print(f"[OK] Prediction works!")
         print(f"  Detected faces: {len(results['faces'])}")
         print(f"  Ages: {results['ages']}")
         print(f"  Genders: {results['genders']}")
@@ -64,7 +64,7 @@ def main():
     # Test model loading
     detector = test_model_loading()
     if detector is None:
-        print("\n⚠️  Please run 'python download_models.py' first to download models.")
+        print("\n Please run 'python download_models.py' first to download models.")
         return
     
     # Test face detection
