@@ -26,13 +26,13 @@ def download_caffe_face_model(model_dir='models'):
         filepath = os.path.join(model_dir, filename)
         
         if os.path.exists(filepath):
-            print(f"✓ {filename} already exists")
+            print(f"[SKIP] {filename} already exists")
             continue
         
         print(f"Downloading {filename}...")
         try:
             urllib.request.urlretrieve(url, filepath)
-            print(f"✓ Downloaded successfully!")
+            print(f"[OK] Downloaded successfully!")
         except Exception as e:
             print(f"✗ Error: {e}")
         print()

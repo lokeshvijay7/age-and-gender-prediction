@@ -64,20 +64,26 @@ def draw_predictions(image: np.ndarray,
         
         # Calculate label size and position
         font = cv2.FONT_HERSHEY_SIMPLEX
-        font_scale = 0.6
+        font_scale = 0.9
         thickness = 2
         (label_width, label_height), baseline = cv2.getTextSize(label, font, font_scale, thickness)
         
+        # Ensure label fits within image width
+        image_h, image_w = output.shape[:2]
+        label_x = x
+        if x + label_width > image_w:
+            label_x = max(0, image_w - label_width)
+
         # Draw label background
         label_y = max(y - 10, label_height + 10)
         cv2.rectangle(output, 
-                     (x, label_y - label_height - baseline - 5), 
-                     (x + label_width, label_y + baseline - 5), 
+                     (label_x, label_y - label_height - baseline - 5), 
+                     (label_x + label_width, label_y + baseline - 5), 
                      color, 
                      cv2.FILLED)
         
         # Draw label text
-        cv2.putText(output, label, (x, label_y - 5), font, font_scale, (0, 0, 0), thickness)
+        cv2.putText(output, label, (label_x, label_y - 5), font, font_scale, (0, 0, 0), thickness)
     
     return output
 

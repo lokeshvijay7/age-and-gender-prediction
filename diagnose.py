@@ -14,17 +14,17 @@ def test_webcam_capture():
     cap = cv2.VideoCapture(0)
     
     if not cap.isOpened():
-        print("❌ Failed to open webcam")
+        print("[ERROR] Failed to open webcam")
         return False
     
     ret, frame = cap.read()
     cap.release()
     
     if not ret:
-        print("❌ Failed to read frame from webcam")
+        print("[ERROR] Failed to read frame from webcam")
         return False
     
-    print(f"✓ Webcam capture successful! Frame shape: {frame.shape}")
+    print(f"[OK] Webcam capture successful! Frame shape: {frame.shape}")
     return True
 
 
@@ -47,13 +47,13 @@ def test_image_conversion():
         
         photo = ImageTk.PhotoImage(img_pil)
         
-        print(f"✓ Image conversion successful! PhotoImage size: {photo.width()}x{photo.height()}")
+        print(f"[OK] Image conversion successful! PhotoImage size: {photo.width()}x{photo.height()}")
         
         root.destroy()
         return True
         
     except Exception as e:
-        print(f"❌ Image conversion failed: {e}")
+        print(f"[ERROR] Image conversion failed: {e}")
         return False
 
 
@@ -105,7 +105,7 @@ def test_canvas_display():
         
         canvas.update()
         
-        print("✓ Canvas display test window opened!")
+        print("[OK] Canvas display test window opened!")
         print("  You should see a green image with 'TEST IMAGE' text")
         print("  Close the window to continue...")
         
@@ -113,7 +113,7 @@ def test_canvas_display():
         return True
         
     except Exception as e:
-        print(f"❌ Canvas display failed: {e}")
+        print(f"[ERROR] Canvas display failed: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -146,15 +146,15 @@ def main():
     print("=" * 60)
     
     for test_name, result in results:
-        status = "✓ PASS" if result else "❌ FAIL"
+        status = "[PASS]" if result else "[FAIL]"
         print(f"{test_name:.<40} {status}")
     
     print()
     
     if all(r[1] for r in results):
-        print("✓ All tests passed! The application should work correctly.")
+        print("[OK] All tests passed! The application should work correctly.")
     else:
-        print("⚠️  Some tests failed. Please check the errors above.")
+        print("[WARNING] Some tests failed. Please check the errors above.")
 
 
 if __name__ == "__main__":
