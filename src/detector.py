@@ -256,12 +256,15 @@ class AgeGenderDetector:
         
         # Predict age and gender for each face
         for (x, y, w, h) in faces:
-            # Extract face region with padding
-            padding = 20
-            y1 = max(0, y - padding)
-            y2 = min(image.shape[0], y + h + padding)
-            x1 = max(0, x - padding)
-            x2 = min(image.shape[1], x + w + padding)
+            # Extract face region with proportional padding
+            # A 10% padding ensures we capture the jawline and hair without
+            # shrinking the face too much when resizing to 227x227.
+            padding_y = int(h * 0.1)
+            padding_x = int(w * 0.1)
+            y1 = max(0, y - padding_y)
+            y2 = min(image.shape[0], y + h + padding_y)
+            x1 = max(0, x - padding_x)
+            x2 = min(image.shape[1], x + w + padding_x)
             
             face_img = image[y1:y2, x1:x2]
             

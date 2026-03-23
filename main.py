@@ -6,7 +6,6 @@ Main entry point for the application.
 import tkinter as tk
 from src.gui import AgeGenderGUI
 
-
 def main():
     """Main function to run the application."""
     # Create root window

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Manager - SmartAd</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-dark {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .input-dark:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-6">
+    
+    <!-- Navbar -->
+    <header class="flex justify-between items-center mb-8 glass-panel rounded-2xl p-4 px-8">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">Campaign Manager</h1>
+            <p class="text-sm text-slate-400">Upload ads and assign demographic targets.</p>
+        </div>
+        <a href="/" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-500/30">
+            &larr; Back to Live Display
+        </a>
+    </header>
+
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Upload Form -->
+        <div class="lg:col-span-1">
+            <div class="glass-panel p-6 rounded-3xl">
+                <h2 class="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    Upload New Ad
+                </h2>
+                
+                <form action="/upload_ad" method="POST" enctype="multipart/form-data" class="space-y-5">
+                    
+                    <!-- File Input -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Ad Image</label>
+                        <input type="file" name="ad_image" accept="image/*" required
+                            class="block w-full text-sm text-slate-400
+                                file:mr-4 file:py-2.5 file:px-4
+                                file:rounded-xl file:border-0
+                                file:text-sm file:font-medium
+                                file:bg-blue-600 file:text-white
+                                hover:file:bg-blue-500 file:transition-colors file:cursor-pointer
+                                input-dark rounded-xl p-1 cursor-pointer">
+                    </div>
+
+                    <!-- Target Age -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Target Age Category</label>
+                        <select name="target_age" class="w-full input-dark rounded-xl p-3 text-sm appearance-none">
+                            <option value="Any">Any Age</option>
+                            <option value="Child">Child (0-12)</option>
+                            <option value="Teen">Teen / Young Adult (13-24)</option>
+                            <option value="Adult">Adult (25-50)</option>
+                            <option value="Senior">Senior (50+)</option>
+                        </select>
+                    </div>
+
+                    <!-- Target Gender -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Target Gender</label>
+                        <select name="target_gender" class="w-full input-dark rounded-xl p-3 text-sm appearance-none">
+                            <option value="Any">Any Gender</option>
+                            <option value="Male">Male Only</option>
+                            <option value="Female">Female Only</option>
+                        </select>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-700/50">
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]">
+                            Upload & Activate Ad
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Active Campaigns -->
+        <div class="lg:col-span-2">
+            <div class="glass-panel p-6 rounded-3xl h-full">
+                <h2 class="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Active Campaigns ({{ ads|length }})
+                </h2>
+
+                {% if ads %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-max overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
+                    {% for ad in ads %}
+                    <div class="bg-slate-800/80 rounded-2xl border border-slate-700 overflow-hidden group hover:border-slate-500 transition-colors">
+                        <div class="h-40 overflow-hidden bg-black/50 relative">
+                            <img src="{{ ad.url }}" alt="Ad Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <!-- Overlay gradients -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-80"></div>
+                        </div>
+                        <div class="p-4 relative">
+                            <div class="flex gap-2 mb-2 absolute -top-8 left-4">
+                                <span class="bg-blue-600/90 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-md shadow-lg">
+                                    {{ ad.target_age }} Age
+                                </span>
+                                <span class="bg-purple-600/90 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-md shadow-lg">
+                                    {{ ad.target_gender }}
+                                </span>
+                            </div>
+                            <p class="text-slate-400 text-xs font-mono mt-2 truncate" title="{{ ad.filename }}">{{ ad.filename }}</p>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-4 flex gap-2">
+                                <button type="button" onclick="openEditModal('{{ ad.id }}', '{{ ad.target_age }}', '{{ ad.target_gender }}')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs py-1.5 rounded-lg transition-colors border border-slate-600">
+                                    Edit Target
+                                </button>
+                                <form action="/delete_ad/{{ ad.id }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this ad?');">
+                                    <button type="submit" class="w-full bg-red-900/50 hover:bg-red-600 text-red-200 hover:text-white text-xs py-1.5 rounded-lg transition-colors border border-red-800/50 hover:border-red-500">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="h-64 flex flex-col items-center justify-center border-2 border-dashed border-slate-700 rounded-2xl text-slate-500">
+                    <svg class="w-12 h-12 mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p class="font-medium text-slate-400">No campaigns active</p>
+                    <p class="text-sm">Upload your first ad on the left to start.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel p-6 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-300" id="editModalContent">
+            <h2 class="text-xl font-semibold text-white mb-6">Edit Campaign Targets</h2>
+            
+            <form id="editForm" method="POST" class="space-y-4">
+                <!-- Target Age -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Target Age Category</label>
+                    <select id="editTargetAge" name="target_age" class="w-full input-dark rounded-xl p-3 text-sm appearance-none">
+                        <option value="Any">Any Age</option>
+                        <option value="Child">Child (0-12)</option>
+                        <option value="Teen">Teen / Young Adult (13-24)</option>
+                        <option value="Adult">Adult (25-50)</option>
+                        <option value="Senior">Senior (50+)</option>
+                    </select>
+                </div>
+
+                <!-- Target Gender -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Target Gender</label>
+                    <select id="editTargetGender" name="target_gender" class="w-full input-dark rounded-xl p-3 text-sm appearance-none">
+                        <option value="Any">Any Gender</option>
+                        <option value="Male">Male Only</option>
+                        <option value="Female">Female Only</option>
+                    </select>
+                </div>
+
+                <div class="pt-6 border-t border-slate-700/50 flex gap-3">
+                    <button type="button" onclick="closeEditModal()" class="flex-1 bg-transparent hover:bg-slate-800 text-slate-300 font-medium py-2.5 rounded-xl transition-colors border border-slate-600">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('editModal');
+        const modalContent = document.getElementById('editModalContent');
+        const editForm = document.getElementById('editForm');
+        const editAgeSelect = document.getElementById('editTargetAge');
+        const editGenderSelect = document.getElementById('editTargetGender');
+
+        function openEditModal(id, currentAge, currentGender) {
+            editForm.action = `/edit_ad/${id}`;
+            editAgeSelect.value = currentAge;
+            editGenderSelect.value = currentGender;
+            
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // match duration-300
+        }
+        
+        // Close modal if clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeEditModal();
+            }
+        });
+    </script>
+    <style>
+        /* Custom Scrollbar for the ads grid */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(71, 85, 105, 1);
+        }
+    </style>
+</body>
+</html>
